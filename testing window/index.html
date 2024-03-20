@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Model Viewer</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/GLTFLoader.js"></script>
+    <script>
+        // Set up scene
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('container').appendChild(renderer.domElement);
+
+        // Add lighting
+        var light = new THREE.DirectionalLight(0xffffff);
+        light.position.set(1, 1, 1).normalize();
+        scene.add(light);
+
+        // Add model
+        var loader = new THREE.GLTFLoader();
+        var modelUrls = {
+    glb: 'http://localhost:3000/model?url=https://assets.meshy.ai/google-oauth2%7C111128537788921410434/tasks/018e55b6-bc6c-7913-81b2-0902ddfd48c6/output/model.glb',
+    fbx: 'http://localhost:3000/model?url=https://assets.meshy.ai/google-oauth2%7C111128537788921410434/tasks/018e55b6-bc6c-7913-81b2-0902ddfd48c6/output/model.fbx',
+    usdz: 'http://localhost:3000/model?url=https://assets.meshy.ai/google-oauth2%7C111128537788921410434/tasks/018e55b6-bc6c-7913-81b2-0902ddfd48c6/output/model.usdz'
+};
+
+        var modelUrl = modelUrls.glb; // Default to GLB format
+        loader.load(modelUrl, function (gltf) {
+            scene.add(gltf.scene);
+        });
+
+        // Set camera position
+        camera.position.z = 5;
+
+        // Render loop
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+</body>
+</html>
